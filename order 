@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spartan Biolabs Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0c; --panel:#141416; --line:#2a2a2e; --text:#ece8df; --muted:#9a968d;
+    --gold:#c9a24a; --gold-hi:#e3c574; --good:#7fbf7f; --warn:#e0a458;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.45}
+  .wrap{max-width:640px;margin:0 auto;padding:24px 16px 140px}
+  header{text-align:center;margin-bottom:22px}
+  h1{font-family:Cinzel,serif;letter-spacing:.12em;color:var(--gold);font-size:26px;margin:0}
+  .tag{color:var(--muted);font-size:12px;letter-spacing:.25em;text-transform:uppercase;margin-top:6px}
+  h2{font-family:Cinzel,serif;font-size:15px;letter-spacing:.1em;color:var(--gold);margin:28px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  .note{color:var(--muted);font-size:13px}
+  .prod{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .prod.on{border-color:var(--gold)}
+  .pinfo{flex:1;min-width:0}
+  .pname{font-weight:600}
+  .pspec{color:var(--muted);font-size:13px}
+  .price{color:var(--gold-hi);font-weight:600;min-width:52px;text-align:right}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#1d1d20;color:var(--text);font-size:18px;cursor:pointer}
+  .qty span{min-width:20px;text-align:center;font-weight:600}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+  input,textarea,select{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit}
+  textarea{min-height:70px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pay label{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 6px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer;text-align:center}
+  .pay input{display:none}
+  .pay label:has(input:checked){border-color:var(--gold);background:#1f1a10}
+  .pay small{color:var(--good);font-size:11px}
+  .sum{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .line{display:flex;justify-content:space-between;padding:3px 0}
+  .line.disc{color:var(--good)}
+  .line.total{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-weight:600;font-size:17px;color:var(--gold-hi)}
+  .hint{font-size:12px;color:var(--warn);margin-top:6px}
+  .ruo{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-size:13px;color:var(--muted)}
+  .ruo input{width:20px;height:20px;margin-top:2px;flex:none}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,12,.96);border-top:1px solid var(--line);padding:12px 16px}
+  .bar .in{max-width:640px;margin:0 auto;display:flex;gap:8px}
+  .btn{flex:1;padding:14px;border-radius:10px;border:none;font:600 15px Inter,sans-serif;cursor:pointer}
+  .primary{background:var(--gold);color:#111}
+  .secondary{background:#1d1d20;color:var(--text);border:1px solid var(--line);flex:0 0 110px}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .err{color:#e07a7a;font-size:13px;margin-top:8px;min-height:18px}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>SPARTAN BIOLABS</h1>
+    <div class="tag">Precision • Verification • Research</div>
+  </header>
+
+  <h2>Select Products</h2>
+  <p class="note">Every lot is third-party tested. COA included with each order.</p>
+  <div id="products"></div>
+
+  <h2>Payment Method</h2>
+  <div class="pay">
+    <label><input type="radio" name="pay" value="Zelle" checked>Zelle<small>10% off</small></label>
+    <label><input type="radio" name="pay" value="Crypto">Crypto<small>10% off</small></label>
+    <label><input type="radio" name="pay" value="Card">Card<small>&nbsp;</small></label>
+  </div>
+
+  <h2>Shipping Details</h2>
+  <label for="name">Full name</label><input id="name" autocomplete="name">
+  <div class="row">
+    <div><label for="email">Email</label><input id="email" type="email" autocomplete="email"></div>
+    <div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel"></div>
+  </div>
+  <label for="addr">Shipping address</label><textarea id="addr" autocomplete="street-address" placeholder="Street, City, State, ZIP"></textarea>
+  <label for="notes">Notes (optional)</label><input id="notes">
+
+  <h2>Order Summary</h2>
+  <div class="sum" id="summary"></div>
+
+  <div class="ruo">
+    <input type="checkbox" id="ruo">
+    <label for="ruo" style="margin:0">I confirm I am 21+ and that all products are purchased strictly for laboratory research use only. They are not for human or animal consumption.</label>
+  </div>
+  <div class="err" id="err"></div>
+
+  <footer>Research use only. You'll receive a quote confirmation and payment details by reply.</footer>
+</div>
+
+<div class="bar"><div class="in">
+  <button class="btn secondary" id="copy">Copy</button>
+  <button class="btn primary" id="send">Send Order via WhatsApp</button>
+</div></div>
+
+<script>
+// ===== EDIT HERE =====
+const WHATSAPP = "12089571737";
+const SHIPPING = 25;
+const PAY_DISCOUNT = { Zelle: 0.10, Crypto: 0.10, Card: 0 };
+const VOLUME_TIERS = [ { min: 300, pct: 0.10 }, { min: 200, pct: 0.05 } ]; // highest first
+const PRODUCTS = [
+  { name: "GLP-3 (Retatrutide)", spec: "30mg", price: 150 },
+  { name: "Tesamorelin", spec: "10mg", price: 70 },
+  { name: "CJC-1295 / Ipamorelin", spec: "10mg", price: 55 },
+  { name: "KLOW80", spec: "80mg blend", price: 125 },
+  { name: "GLOW70", spec: "70mg blend", price: 110 },
+  { name: "WOLVERINE10", spec: "BPC-157 + TB-500", price: 70 },
+  { name: "GHK-Cu", spec: "50mg", price: 40 },
+  { name: "NAD+", spec: "1000mg", price: 75 },
+  { name: "MOTS-C", spec: "10mg", price: 50 },
+  { name: "SS-31", spec: "10mg", price: 100 },
+  { name: "PT-141", spec: "10mg", price: 70 },
+  { name: "Semax", spec: "10mg", price: 50 },
+  { name: "Selank", spec: "10mg", price: 50 },
+  { name: "Bacteriostatic Water", spec: "10ml", price: 10 }
+];
+// =====================
+
+const qty = PRODUCTS.map(() => 0);
+const $ = id => document.getElementById(id);
+const money = n => "$" + n.toFixed(2).replace(/\.00$/, "");
+
+function renderProducts(){
+  $("products").innerHTML = PRODUCTS.map((p,i) => `
+    <div class="prod ${qty[i] ? "on" : ""}">
+      <div class="pinfo"><div class="pname">${p.name}</div><div class="pspec">${p.spec}</div></div>
+      <div class="price">${money(p.price)}</div>
+      <div class="qty">
+        <button aria-label="Remove one" onclick="step(${i},-1)">−</button>
+        <span>${qty[i]}</span>
+        <button aria-label="Add one" onclick="step(${i},1)">+</button>
+      </div>
+    </div>`).join("");
+}
+function step(i,d){ qty[i] = Math.max(0, qty[i] + d); renderProducts(); renderSummary(); }
+
+function calc(){
+  const items = PRODUCTS.map((p,i) => ({...p, q: qty[i]})).filter(x => x.q);
+  const subtotal = items.reduce((s,x) => s + x.price * x.q, 0);
+  const pay = document.querySelector('input[name=pay]:checked').value;
+  const tier = VOLUME_TIERS.find(t => subtotal >= t.min);
+  const volPct = tier ? tier.pct : 0;
+  const payPct = PAY_DISCOUNT[pay] || 0;
+  const volAmt = subtotal * volPct, payAmt = subtotal * payPct;
+  const total = items.length ? subtotal - volAmt - payAmt + SHIPPING : 0;
+  const next = [...VOLUME_TIERS].reverse().find(t => subtotal < t.min);
+  return { items, subtotal, pay, volPct, payPct, volAmt, payAmt, total, next };
+}
+
+function renderSummary(){
+  const c = calc();
+  if(!c.items.length){ $("summary").innerHTML = '<div class="note">No products selected yet.</div>'; return; }
+  let h = c.items.map(x => `<div class="line"><span>${x.q} × ${x.name} ${x.spec}</span><span>${money(x.price*x.q)}</span></div>`).join("");
+  h += `<div class="line" style="border-top:1px solid var(--line);margin-top:6px;padding-top:6px"><span>Subtotal</span><span>${money(c.subtotal)}</span></div>`;
+  if(c.volAmt) h += `<div class="line disc"><span>Volume discount (${c.volPct*100}%)</span><span>−${money(c.volAmt)}</span></div>`;
+  if(c.payAmt) h += `<div class="line disc"><span>${c.pay} discount (${c.payPct*100}%)</span><span>−${money(c.payAmt)}</span></div>`;
+  h += `<div class="line"><span>Shipping (UPS Standard)</span><span>${money(SHIPPING)}</span></div>`;
+  h += `<div class="line total"><span>Estimated total</span><span>${money(c.total)}</span></div>`;
+  if(c.next) h += `<div class="hint">Add ${money(c.next.min - c.subtotal)} more to unlock ${c.next.pct*100}% off.</div>`;
+  $("summary").innerHTML = h;
+}
+
+function orderId(){
+  const d = new Date(), p = n => String(n).padStart(2,"0");
+  return `SB-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
+}
+
+function buildMessage(){
+  const c = calc();
+  const L = [];
+  L.push(`SPARTAN BIOLABS ORDER ${orderId()}`, "");
+  c.items.forEach(x => L.push(`${x.q} x ${x.name} ${x.spec} = ${money(x.price*x.q)}`));
+  L.push("", `Subtotal: ${money(c.subtotal)}`);
+  if(c.volAmt) L.push(`Volume discount ${c.volPct*100}%: -${money(c.volAmt)}`);
+  if(c.payAmt) L.push(`${c.pay} discount ${c.payPct*100}%: -${money(c.payAmt)}`);
+  L.push(`Shipping: ${money(SHIPPING)}`, `ESTIMATED TOTAL: ${money(c.total)}`, "");
+  L.push(`Payment: ${c.pay}`, "");
+  L.push(`Name: ${$("name").value.trim()}`, `Email: ${$("email").value.trim()}`, `Phone: ${$("phone").value.trim()}`, `Ship to: ${$("addr").value.trim()}`);
+  if($("notes").value.trim()) L.push(`Notes: ${$("notes").value.trim()}`);
+  L.push("", "Confirmed 21+ and research use only.");
+  return L.join("\n");
+}
+
+function validate(){
+  if(!calc().items.length) return "Select at least one product.";
+  if(!$("name").value.trim() || !$("addr").value.trim()) return "Please enter your name and shipping address.";
+  if(!$("email").value.trim() && !$("phone").value.trim()) return "Please enter an email or phone number.";
+  if(!$("ruo").checked) return "Please confirm the research-use-only statement.";
+  return "";
+}
+
+$("send").onclick = () => {
+  const e = validate(); $("err").textContent = e; if(e) return;
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(buildMessage())}`, "_blank");
+};
+$("copy").onclick = async () => {
+  const e = validate(); $("err").textContent = e; if(e) return;
+  try { await navigator.clipboard.writeText(buildMessage()); $("copy").textContent = "Copied ✓"; }
+  catch { $("err").textContent = "Couldn't copy automatically. Please use the WhatsApp button."; }
+  setTimeout(() => $("copy").textContent = "Copy", 2000);
+};
+document.querySelectorAll('input[name=pay]').forEach(r => r.onchange = renderSummary);
+
+renderProducts(); renderSummary();
+</script>
+</body>
+</html>
